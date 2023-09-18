@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    env_file: ./craftcms/.env
+    container_name: web
+    volumes:
+      - ./craftcms:/var/www/html:ro
+    depends_on:
+      - db
+    networks:
+      static-network:
+        ipv4_address: 172.31.128.2
+    #restart: on-failure
+  db:
+    image: mysql:latest
+    container_name: db
+    tty: true
+    volumes:
+      - ./mysql/mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: passwd
+      MYSQL_ROOT_PASSWORD: r00tP4sswD
+    networks:
+      static-network:
+        ipv4_address: 172.31.128.3
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16
+          
