@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx:8.2-alpine
+FROM webdevops/php:8.2-alpine
 
 LABEL description="Keep configuration secure"
 
@@ -6,13 +6,11 @@ LABEL version="1.0"
 
 LABEL author="meulody"
 
-RUN echo "Asia/Ho_Chi_Minh" > /etc/timezone
+ENV TZ=Asia/Ho_Chi_Minh
 
 ENV WEB_DOCUMENT_ROOT=/app
 
-RUN echo "memory_limit = 512 M" >> /opt/docker/etc/php/php.ini
-
-COPY ./nginx/nginx.conf /opt/docker/etc/nginx/main.conf
+RUN echo "max_execution_time = 250" >> /opt/docker/etc/php/php.webdevops.ini 
 
 WORKDIR /app
 
@@ -23,4 +21,6 @@ RUN composer2 install -d /app \
     && chown -R www-data:www-data /app/composer.lock \
     && chmod 777 /app/storage
 
-CMD php craft up
+EXPOSE 8080
+
+CMD (php craft serve "0.0.0.0:8080" >/tmp/nothing_payload_in_here.log 2>&1 &) && /opt/docker/bin/service.d/supervisor.sh
