@@ -16,10 +16,14 @@ WORKDIR /app
 
 COPY --chown=www-data:www-data ./craftcms /app
 
+RUN composer2 require -d /app nystudio107/craft-twigprofiler:4.0.0-beta.1 -w 
+
 RUN composer2 install -d /app \
     &&  chown -R www-data:www-data /app/vendor \
     && chown -R www-data:www-data /app/composer.lock \
     && chmod 777 /app/storage
+
+RUN composer require -d /app nystudio107/craft-twigprofiler:4.0.0-beta.1 -w 
 
 EXPOSE 8080
 

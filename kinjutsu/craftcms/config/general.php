@@ -32,4 +32,6 @@ return GeneralConfig::create()
     ])
     // Disable update
     ->allowUpdates(false)
+    // Load allow extensions only file image and file imagick
+    ->extraAllowedFileExtensions(['msl', 'png', 'jpg'])
 ;
